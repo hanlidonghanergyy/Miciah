@@ -1,7 +1,6 @@
 import { FC } from "react";
 import classNames from "clsx";
 import { QRCodeCanvas } from "qrcode.react";
-import { isPopup as isPopupPrimitive } from "lib/ext/view";
 import { useCopyCanvasToClipboard } from "lib/react-hooks/useCopyCanvasToClipboard";
 
 import { useAccounts, useLazyNetwork } from "app/hooks";
@@ -21,7 +20,6 @@ const ShareAddress: FC<{
 }> = ({ title, className, hideLabel, labelClassName, walletNameDisplayed }) => {
   const { currentAccount } = useAccounts();
   const { copy, copied } = useCopyCanvasToClipboard("#receive-canvas canvas");
-  const isPopup = isPopupPrimitive();
   const network = useLazyNetwork();
 
   return (
@@ -58,8 +56,8 @@ const ShareAddress: FC<{
           <QRCodeCanvas
             bgColor="#1C1E2F"
             fgColor="#F8FCFD"
-            includeMargin={false}
-            size={80}
+            size={90}
+            marginSize={2}
             level="L"
             value={currentAccount.address}
           />
@@ -69,25 +67,23 @@ const ShareAddress: FC<{
             This address can be used to receive funds. Share it with someone or
             just use it for withdrawal on exchanges.
           </p>
-          {!isPopup && (
-            <Button
-              theme="tertiary"
-              className={classNames(
-                "text-sm text-brand-light !font-normal",
-                "!p-1 !pr-2 !min-w-0",
-                "-ml-2 mt-auto",
-                "items-center",
-              )}
-              onClick={copy}
-            >
-              {copied ? (
-                <SuccessIcon className="mr-1" />
-              ) : (
-                <CopyIcon className="mr-1" />
-              )}
-              {copied ? "Media copied" : "Copy media"}
-            </Button>
-          )}
+          <Button
+            theme="tertiary"
+            className={classNames(
+              "text-sm text-brand-light !font-normal",
+              "!p-1 !pr-2 !min-w-0",
+              "-ml-2 mt-auto",
+              "items-center",
+            )}
+            onClick={copy}
+          >
+            {copied ? (
+              <SuccessIcon className="mr-1" />
+            ) : (
+              <CopyIcon className="mr-1" />
+            )}
+            {copied ? "Media copied" : "Copy media"}
+          </Button>
         </div>
       </div>
       {network?.faucetUrls && network.faucetUrls?.length > 0 && (
