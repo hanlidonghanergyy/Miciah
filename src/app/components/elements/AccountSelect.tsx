@@ -9,8 +9,8 @@ import { ACCOUNTS_SEARCH_OPTIONS } from "app/defaults";
 import {
   accountAddressAtom,
   activeTabAtom,
-  activeTabOriginAtom,
   getPermissionAtom,
+  getTabOrigin,
 } from "app/atoms";
 import { useAccounts, useToken } from "app/hooks";
 import { Page } from "app/nav";
@@ -38,7 +38,7 @@ const AccountSelect: FC<AccountSelectProps> = ({ className }) => {
   const { currentAccount, allAccounts } = useAccounts();
   const setAccountAddress = useSetAtom(accountAddressAtom);
   const activeTab = useAtomValue(activeTabAtom);
-  const tabOrigin = useAtomValue(activeTabOriginAtom);
+  const tabOrigin = getTabOrigin(activeTab);
   const purePermission = useAtomValue(getPermissionAtom(tabOrigin));
 
   const [opened, setOpened] = useState(false);

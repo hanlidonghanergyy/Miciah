@@ -15,7 +15,8 @@
     "storage",
     "clipboardWrite",
     "activeTab",
-    "scripting"
+    "scripting",
+    "sidePanel"
   ],
 
   "host_permissions": [
@@ -47,6 +48,9 @@
     },
     "__chrome__chrome_style": false,
     "__firefox__browser_style": false
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
   },
   "background": {
     "service_worker": "sw.js"

@@ -4,7 +4,7 @@ import { useAtomValue } from "jotai";
 
 import { WalletStatus } from "core/types";
 
-import { tgApplicationAtom, walletStateAtom } from "app/atoms";
+import { walletStateAtom } from "app/atoms";
 import { useSteps } from "app/hooks/steps";
 import { AddAccountStep } from "app/nav";
 import AddAccountHeader from "app/components/blocks/AddAccountHeader";
@@ -42,15 +42,6 @@ const ChooseAddAccountWay = memo<{ onLedgerOpened?: () => void }>(
   ({ onLedgerOpened }) => {
     const { walletStatus } = useAtomValue(walletStateAtom);
     const { navigateToStep, stateRef } = useSteps();
-    const tgApplication = useAtomValue(tgApplicationAtom);
-
-    const existingApplication = useMemo(() => {
-      try {
-        if (tgApplication) return JSON.parse(tgApplication);
-      } catch {}
-
-      return null;
-    }, [tgApplication]);
 
     useEffect(() => {
       stateRef.current = {};
@@ -90,7 +81,7 @@ const ChooseAddAccountWay = memo<{ onLedgerOpened?: () => void }>(
             },
           },
         ] as const,
-      [existingApplication, stateRef, navigateToStep, onLedgerOpened],
+      [stateRef, navigateToStep, onLedgerOpened],
     );
 
     return (

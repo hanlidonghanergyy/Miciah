@@ -114,6 +114,10 @@ const HTML_PLUGIN_TEMPLATES = [
     chunks: ["popup"],
   },
   {
+    path: path.join(PUBLIC_PATH, "sidepanel.html"),
+    chunks: ["popup"],
+  },
+  {
     path: path.join(PUBLIC_PATH, "approve.html"),
     chunks: ["approve"],
   },

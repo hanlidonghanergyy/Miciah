@@ -6,9 +6,10 @@ import { isPopupWindow } from "lib/ext/view";
 import { WalletStatus } from "core/types";
 import { TEvent, trackEvent } from "core/client";
 
-import { openInTab } from "app/helpers";
+import { openInTab, toggleSidePanel } from "app/helpers";
 import {
   getTotalAccountBalanceAtom,
+  isSidePanelEnabledAtom,
   popupToolbarTabAtom,
   receiveModalAtom,
   updateAvailableAtom,
@@ -17,6 +18,8 @@ import {
 import ScrollTopButton from "app/components/blocks/popup/ScrollTopButton";
 import ScrollAreaContainer from "app/components/elements/ScrollAreaContainer";
 import { ReactComponent as ExpandIcon } from "app/icons/expand.svg";
+import { ReactComponent as SidePanelOpenIcon } from "app/icons/sidepanel-open.svg";
+import { ReactComponent as SidePanelCloseIcon } from "app/icons/sidepanel-close.svg";
 import { ReactComponent as ActivityIcon } from "app/icons/activity-toolbar.svg";
 import { ReactComponent as CoinsIcon } from "app/icons/coins.svg";
 import { ReactComponent as CopyIcon } from "app/icons/copy.svg";
@@ -90,7 +93,7 @@ const PopupLayout: FC<PopupLayoutProps> = ({ className, children }) => {
                   <ProfileButton
                     size="small"
                     hideAddress
-                    className="-mr-1 max-w-[50%]"
+                    className="-mr-1 max-w-[47.5%]"
                   />
                 </div>
                 <WalletInfo />
@@ -151,6 +154,7 @@ const PopupLayout: FC<PopupLayoutProps> = ({ className, children }) => {
 export default PopupLayout;
 
 const NavToolbar: FC = () => {
+  const sidePanelEnabled = useAtomValue(isSidePanelEnabledAtom);
   const [tab, setTab] = useAtom(popupToolbarTabAtom);
   const activityBadgeDisplayed = useActivityBadge();
 
@@ -158,31 +162,43 @@ const NavToolbar: FC = () => {
     <nav
       className={classNames(
         "fixed bottom-0 w-full",
+        "flex items-center",
         "px-3 py-2 bg-[#2A2D35]",
         "flex items-center justify-between gap-x-3",
         "shadow-popup-nav",
       )}
     >
-      <NavToolbarButton
-        Icon={CoinsIcon}
-        label="Assets"
-        isActive={tab === PopupToolbarTab.Assets}
-        onClick={() => setTab(PopupToolbarTab.Assets)}
-      />
-      <NavToolbarButton
-        Icon={ActivityIcon}
-        label="Activity"
-        isActive={tab === PopupToolbarTab.Activity}
-        onClick={() => setTab(PopupToolbarTab.Activity)}
-        badge={activityBadgeDisplayed}
-      />
-      <Button
-        theme="tertiary"
-        className="border border-[#515561] rounded-lg col-span-1 !p-[0.625rem] !min-w-0"
-        onClick={() => openInTab(undefined, ["token"])}
-      >
-        <ExpandIcon />
-      </Button>
+      <div className="flex items-center gap-x-2 grow">
+        <NavToolbarButton
+          Icon={CoinsIcon}
+          label="Assets"
+          isActive={tab === PopupToolbarTab.Assets}
+          onClick={() => setTab(PopupToolbarTab.Assets)}
+        />
+        <NavToolbarButton
+          Icon={ActivityIcon}
+          label="Activity"
+          isActive={tab === PopupToolbarTab.Activity}
+          onClick={() => setTab(PopupToolbarTab.Activity)}
+          badge={activityBadgeDisplayed}
+        />
+      </div>
+      <div className="flex items-center gap-x-2">
+        <Button
+          theme="tertiary"
+          className="border border-[#515561] rounded-lg col-span-1 !p-[0.625rem] !min-w-0"
+          onClick={() => openInTab(undefined, ["token"])}
+        >
+          <ExpandIcon />
+        </Button>
+        <Button
+          theme="tertiary"
+          className="border border-[#515561] rounded-lg col-span-1 !p-[0.625rem] !min-w-0"
+          onClick={() => toggleSidePanel()}
+        >
+          {sidePanelEnabled ? <SidePanelCloseIcon /> : <SidePanelOpenIcon />}
+        </Button>
+      </div>
     </nav>
   );
 };
@@ -204,12 +220,13 @@ const NavToolbarButton: FC<NavToolbarButtonProps> = ({
   <button
     className={classNames(
       "appearance-none",
-      "col-span-4 !text-sm !min-w-36 !max-h-10",
+      "col-span-4 !text-sm !max-h-10",
       "transition",
       "flex items-center justify-center",
       "text-sm font-bold",
       "rounded-[.375rem]",
       "h-full py-3 px-4",
+      "grow",
       badge && !isActive ? "styled-label--pending" : "",
       isActive
         ? "bg-brand-redone text-brand-darkaccent bg-opacity hover:bg-opacity-100 hover:shadow-buttonaccent focus-visible:bg-opacity-100 focus-visible:shadow-buttonaccent active:bg-opacity-70 active:shadow-none"

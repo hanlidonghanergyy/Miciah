@@ -14,7 +14,7 @@ import classNames from "clsx";
 import { match } from "ts-pattern";
 import { PopupToolbarTab } from "app/nav";
 import Masonry from "lib/react-masonry/Masonry";
-import { useAtomsAll } from "lib/atom-utils";
+import { useAtomsAll, useLazyAtomValue } from "lib/atom-utils";
 
 import {
   Account,
@@ -31,8 +31,10 @@ import {
   LOAD_MORE_ON_NFT_FROM_END,
 } from "app/defaults";
 import {
-  activeTabOriginAtom,
+  activeTabAtom,
   getPermissionAtom,
+  getTabOrigin,
+  isSidePanelEnabledAtom,
   popupToolbarTabAtom,
   tokenTypeAtom,
   walletStateAtom,
@@ -97,11 +99,12 @@ const Activities: FC = () => {
 };
 
 const PreloadAndSync: FC<PropsWithChildren> = ({ children }) => {
-  const tabOrigin = useAtomValue(activeTabOriginAtom);
-  const [permission] = useAtomsAll([
-    getPermissionAtom(tabOrigin),
-    web3MetaMaskCompatibleAtom,
-  ]);
+  useAtomsAll([web3MetaMaskCompatibleAtom, isSidePanelEnabledAtom]);
+
+  const tab = useAtomValue(activeTabAtom);
+  const tabOrigin = getTabOrigin(tab);
+
+  const permission = useLazyAtomValue(getPermissionAtom(tabOrigin), "off");
 
   return (
     <PreloadBaseAndSync chainId={permission?.chainId}>
@@ -111,7 +114,8 @@ const PreloadAndSync: FC<PropsWithChildren> = ({ children }) => {
 };
 
 const PopupNetworkSelect: FC = () => {
-  const tabOrigin = useAtomValue(activeTabOriginAtom);
+  const activeTab = useAtomValue(activeTabAtom);
+  const tabOrigin = getTabOrigin(activeTab);
   const isSyncing = useIsSyncing();
   const currentNetwork = useLazyNetwork();
 
