@@ -12,9 +12,9 @@ import { trackEvent, TEvent } from "core/client";
 
 import {
   activeTabAtom,
-  activeTabOriginAtom,
   getAllPermissionsAtom,
   getPermissionAtom,
+  getTabOrigin,
   web3MetaMaskCompatibleAtom,
 } from "app/atoms";
 import { Page, SettingTab } from "app/nav";
@@ -33,7 +33,7 @@ import Avatar from "app/components/elements/Avatar";
 
 const InteractionWithDapp: FC<{ className?: string }> = ({ className }) => {
   const activeTab = useAtomValue(activeTabAtom);
-  const tabOrigin = useAtomValue(activeTabOriginAtom);
+  const tabOrigin = getTabOrigin(activeTab);
   const purePermission = useAtomValue(getPermissionAtom(tabOrigin));
   const metamaskMode = useAtomValue(web3MetaMaskCompatibleAtom);
   const setMetamaskMode = useSetMetaMaskCompatibleMode(false);
@@ -158,7 +158,7 @@ const InteractionWithDapp: FC<{ className?: string }> = ({ className }) => {
         <div
           className={classNames(
             "flex items-center cursor-pointer group",
-            "max-w-[50%]",
+            "max-w-[47.5%]",
             className,
           )}
         >

@@ -4,6 +4,50 @@ import { isPopup } from "lib/ext/view";
 import { getMainURL } from "lib/ext/utils";
 import { Destination, toHash, navigate } from "lib/navigation";
 
+export async function isSidePanelEnalbed() {
+  try {
+    const current = await chrome.sidePanel.getPanelBehavior();
+
+    return current.openPanelOnActionClick;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+export async function toggleSidePanel() {
+  try {
+    const enabled = await isSidePanelEnalbed();
+
+    if (!enabled) {
+      await chrome.sidePanel.setPanelBehavior({
+        openPanelOnActionClick: true,
+      });
+
+      const currentWindow = await browser.windows.getCurrent();
+      await chrome.sidePanel.open({ windowId: currentWindow.id! });
+
+      window.close();
+    } else {
+      await chrome.sidePanel.setPanelBehavior({
+        openPanelOnActionClick: false,
+      });
+
+      const currentWindow = await browser.windows.getCurrent();
+      await chrome.action.openPopup({ windowId: currentWindow.id! });
+
+      window.close();
+
+      // await new Promise((r) => setTimeout(r, 1000));
+    }
+  } catch (err) {
+    console.error(err);
+    alert(
+      "Failed to toggle side panel - browser doesnt support it or permission not granted",
+    );
+  }
+}
+
 export async function openInTab(to?: Destination, merge?: boolean | string[]) {
   if (!isPopup()) {
     if (to) navigate(to);

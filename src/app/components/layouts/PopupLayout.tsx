@@ -6,9 +6,10 @@ import { isPopupWindow } from "lib/ext/view";
 import { WalletStatus } from "core/types";
 import { TEvent, trackEvent } from "core/client";
 
-import { openInTab } from "app/helpers";
+import { openInTab, toggleSidePanel } from "app/helpers";
 import {
   getTotalAccountBalanceAtom,
+  isSidePanelEnabledAtom,
   popupToolbarTabAtom,
   receiveModalAtom,
   updateAvailableAtom,
@@ -17,6 +18,8 @@ import {
 import ScrollTopButton from "app/components/blocks/popup/ScrollTopButton";
 import ScrollAreaContainer from "app/components/elements/ScrollAreaContainer";
 import { ReactComponent as ExpandIcon } from "app/icons/expand.svg";
+import { ReactComponent as SidePanelOpenIcon } from "app/icons/sidepanel-open.svg";
+import { ReactComponent as SidePanelCloseIcon } from "app/icons/sidepanel-close.svg";
 import { ReactComponent as ActivityIcon } from "app/icons/activity-toolbar.svg";
 import { ReactComponent as CoinsIcon } from "app/icons/coins.svg";
 import { ReactComponent as CopyIcon } from "app/icons/copy.svg";
@@ -90,7 +93,7 @@ const PopupLayout: FC<PopupLayoutProps> = ({ className, children }) => {
                   <ProfileButton
                     size="small"
                     hideAddress
-                    className="-mr-1 max-w-[50%]"
+                    className="-mr-1 max-w-[47.5%]"
                   />
                 </div>
                 <WalletInfo />
@@ -151,6 +154,7 @@ const PopupLayout: FC<PopupLayoutProps> = ({ className, children }) => {
 export default PopupLayout;
 
 const NavToolbar: FC = () => {
+  const sidePanelEnabled = useAtomValue(isSidePanelEnabledAtom);
   const [tab, setTab] = useAtom(popupToolbarTabAtom);
   const activityBadgeDisplayed = useActivityBadge();
 
@@ -182,6 +186,13 @@ const NavToolbar: FC = () => {
         onClick={() => openInTab(undefined, ["token"])}
       >
         <ExpandIcon />
+      </Button>
+      <Button
+        theme="tertiary"
+        className="border border-[#515561] rounded-lg col-span-1 !p-[0.625rem] !min-w-0"
+        onClick={() => toggleSidePanel()}
+      >
+        {sidePanelEnabled ? <SidePanelCloseIcon /> : <SidePanelOpenIcon />}
       </Button>
     </nav>
   );
