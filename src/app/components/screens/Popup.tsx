@@ -104,7 +104,7 @@ const PreloadAndSync: FC<PropsWithChildren> = ({ children }) => {
   const tab = useAtomValue(activeTabAtom);
   const tabOrigin = getTabOrigin(tab);
 
-  const permission = useLazyAtomValue(getPermissionAtom(tabOrigin));
+  const permission = useLazyAtomValue(getPermissionAtom(tabOrigin), "off");
 
   return (
     <PreloadBaseAndSync chainId={permission?.chainId}>
