@@ -21,8 +21,8 @@ const AssetsSwitcher: FC<AssetsSwitcherProps> = ({
       onCheckedChange={onCheckedChange}
       className={classNames(
         "flex items-center",
-        theme === "large" && "rounded-[.875rem] after:rounded-[.875rem]",
-        theme === "small" && "rounded-[.625rem] after:rounded-[.625rem]",
+        theme === "large" && "rounded-[.875rem] after:rounded-[.875rem] gap-2",
+        theme === "small" && "rounded-[.625rem] after:rounded-[.625rem] gap-1",
         "bg-black/10",
         "transition-colors",
         "hover:bg-brand-main/[.05] focus-visible:bg-brand-main/[.05]",
@@ -34,11 +34,7 @@ const AssetsSwitcher: FC<AssetsSwitcherProps> = ({
     >
       <SwitchOption
         theme={theme}
-        className={classNames(
-          theme === "small" && "mr-1",
-          theme === "large" && "mr-2",
-          !checked && "font-bold",
-        )}
+        className={classNames(!checked && "font-bold")}
       >
         Tokens
       </SwitchOption>
@@ -54,10 +50,12 @@ const AssetsSwitcher: FC<AssetsSwitcherProps> = ({
           "bg-brand-main/[.05]",
           "rounded-[.625rem]",
           "transition-transform",
-          theme === "small" && "w-[6.125rem] h-8 rounded-md",
-          theme === "large" && "w-[6.722rem] h-9",
-          theme === "small" && checked && "translate-x-[6.375rem]",
-          theme === "large" && checked && "translate-x-[7.222rem]",
+          theme === "large" && "w-[calc(50%-0.25rem-0.25rem)]",
+          theme === "small" && "w-[calc(50%-0.125rem-0.25rem)]",
+          theme === "small" && "h-8 rounded-md",
+          theme === "large" && "h-9",
+          theme === "small" && checked && "translate-x-[calc(100%+0.25rem)]",
+          theme === "large" && checked && "translate-x-[calc(100%+0.5rem)]",
         )}
       />
     </Switch.Root>
@@ -77,10 +75,10 @@ const SwitchOption: FC<SwitchOptionProps> = ({
   <span
     className={classNames(
       "px-2",
-      "flex items-center justify-center",
+      "w-full flex items-center justify-center",
       "text-base color-brand-light",
-      theme === "small" && "w-[6.125rem] py-1",
-      theme === "large" && "w-[6.722rem] py-1.5",
+      theme === "small" && "py-1",
+      theme === "large" && "py-1.5",
       className,
     )}
   >
