@@ -6,9 +6,9 @@ export const AVALANCHE: Network[] = [
     chainId: 43114,
     type: "mainnet",
     rpcUrls: [
-      "https://rpc.ankr.com/avalanche",
       "https://api.avax.network/ext/bc/C/rpc",
       "https://1rpc.io/avax/c",
+      "https://rpc.ankr.com/avalanche",
       "https://avalanche-c-chain.publicnode.com	",
       "https://endpoints.omniatech.io/v1/avax/mainnet/public",
       "https://avax.meowrpc.com",

@@ -7,8 +7,8 @@ export const BLAST: Network[] = [
     type: "mainnet",
     rpcUrls: [
       "https://rpc.blast.io",
-      "https://rpc.ankr.com/blast",
       "https://blast.din.dev/rpc",
+      "https://rpc.ankr.com/blast",
       "https://blastl2-mainnet.public.blastapi.io",
       "https://blast.blockpi.network/v1/rpc/public",
       "https://blast-rpc.publicnode.com",

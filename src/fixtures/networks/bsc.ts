@@ -7,9 +7,9 @@ export const BSC: Network[] = [
     type: "mainnet",
     rpcUrls: [
       "https://bsc-dataseed1.binance.org",
-      "https://rpc.ankr.com/bsc",
-      "https://binance.llamarpc.com",
       "https://bsc-dataseed.bnbchain.org",
+      "https://binance.llamarpc.com",
+      "https://rpc.ankr.com/bsc",
       "https://1rpc.io/bnb",
       "https://endpoints.omniatech.io/v1/bsc/mainnet/public",
       "https://bsc-rpc.gateway.pokt.network",
