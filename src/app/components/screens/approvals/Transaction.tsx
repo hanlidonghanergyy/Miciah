@@ -44,7 +44,7 @@ import {
   useSync,
 } from "app/hooks";
 import { useLedger } from "app/hooks/ledger";
-import { getLocalNonceAtom } from "app/atoms";
+import { getLocalNonceAtom, getPendingActivitiesAtom } from "app/atoms";
 import { withHumanDelay } from "app/utils";
 import { formatUnits } from "app/utils/txApprove";
 import ApprovalHeader from "app/components/blocks/approvals/ApprovalHeader";
@@ -55,6 +55,8 @@ import DetailsTab from "app/components/blocks/approvals/DetailsTab";
 import ScrollAreaContainer from "app/components/elements/ScrollAreaContainer";
 
 import ApprovalLayout from "./Layout";
+import { useLazyAtomValue } from "lib/atom-utils";
+import { useDialog } from "app/hooks/dialog";
 
 const { keccak256, recoverAddress, getAddress } = ethers;
 
@@ -84,6 +86,7 @@ const ApproveTransaction: FC<ApproveTransactionProps> = ({ approval }) => {
   );
 
   useSync(chainId, accountAddress);
+  usePendingTxsWarning(chainId, accountAddress);
 
   const account = useMemo(
     () => allAccounts.find((acc) => acc.address === approval.accountAddress)!,
@@ -638,6 +641,39 @@ const ApproveTransaction: FC<ApproveTransactionProps> = ({ approval }) => {
 };
 
 export default ApproveTransaction;
+
+function usePendingTxsWarning(chainId: number, accountAddress: string) {
+  const { alert } = useDialog();
+  const pendingActivities = useLazyAtomValue(
+    getPendingActivitiesAtom(accountAddress),
+  );
+
+  const [shown, setShown] = useState(false);
+
+  useEffect(() => {
+    if (shown || !pendingActivities || pendingActivities.length === 0) return;
+
+    const chainActivities = pendingActivities.filter(
+      (activity) => activity.chainId === chainId,
+    );
+
+    if (chainActivities.length > 0) {
+      setShown(true);
+      alert({
+        title: <p>Pending Transactions Detected!</p>,
+        content: (
+          <p>
+            You already have <b>pending transactions</b> on this network. If you
+            approve this <b>new transaction</b>, it will only <b>proceed</b>{" "}
+            after all previous ones are <b>confirmed</b> on the blockchain. If
+            the previous transactions appear <b>stuck</b> or unconfirmed, please
+            use the <b>HIDE</b> feature to <b>remove</b> them from the Activity.
+          </p>
+        ),
+      });
+    }
+  }, [shown, chainId, accountAddress, pendingActivities, alert, setShown]);
+}
 
 const Loading: FC = () => {
   const [delayed, setDelayed] = useState(false);
